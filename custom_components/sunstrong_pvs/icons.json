@@ -21,6 +21,12 @@
       },
       "gateway_uptime": {
         "default": "mdi:clock"
+      },
+      "efficiency": {
+        "default": "mdi:percent-box-outline"
+      },
+      "flashwear": {
+        "default": "mdi:chip"
       }
     }
   }

@@ -46,7 +46,7 @@ from .entity import PVSBaseEntity
 
 _LOGGER = logging.getLogger(__name__)
 
-CURRENT_POWER_KEY = "current_power_production"
+CURRENT_POWER_KEY = "production_power"
 LAST_REPORTED_KEY = "last_reported"
 
 
@@ -92,7 +92,7 @@ INVERTER_SENSORS = (
         native_unit_of_measurement=UnitOfPower.KILO_WATT,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.POWER,
-        suggested_display_precision=1,
+        suggested_display_precision=3,
         value_fn=attrgetter("last_report_kw"),
     ),
     PVSInverterSensorEntityDescription(
@@ -102,13 +102,22 @@ INVERTER_SENSORS = (
         value_fn=lambda inverter: dt_util.utc_from_timestamp(inverter.last_report_date),
     ),
     PVSInverterSensorEntityDescription(
-        key="lifetime_production",
-        translation_key="lifetime_production",
+        key="lifetime_energy",
+        translation_key="lifetime_energy",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.ENERGY,
-        suggested_display_precision=3,
+        suggested_display_precision=0,
         value_fn=attrgetter("lte_kwh"),
+    ),
+    PVSInverterSensorEntityDescription(
+        key="mppt_power",
+        translation_key="mppt_power",
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.POWER,
+        suggested_display_precision=3,
+        value_fn=attrgetter("last_report_mppt_kw"),
     ),
     PVSInverterSensorEntityDescription(
         key="production_current",
@@ -117,8 +126,18 @@ INVERTER_SENSORS = (
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.CURRENT,
         suggested_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
-        suggested_display_precision=3,
+        suggested_display_precision=2,
         value_fn=attrgetter("last_report_current_a"),
+    ),
+    PVSInverterSensorEntityDescription(
+        key="mppt_current",
+        translation_key="mppt_current",
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.CURRENT,
+        suggested_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        suggested_display_precision=2,
+        value_fn=attrgetter("last_report_mppt_a"),
     ),
     PVSInverterSensorEntityDescription(
         key="production_voltage",
@@ -127,8 +146,18 @@ INVERTER_SENSORS = (
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.VOLTAGE,
         suggested_unit_of_measurement=UnitOfElectricPotential.VOLT,
-        suggested_display_precision=1,
+        suggested_display_precision=2,
         value_fn=attrgetter("last_report_voltage_v"),
+    ),
+    PVSInverterSensorEntityDescription(
+        key="mppt_voltage",
+        translation_key="mppt_voltage",
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        suggested_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        suggested_display_precision=2,
+        value_fn=attrgetter("last_report_mppt_v"),
     ),
     PVSInverterSensorEntityDescription(
         key="frequency",
@@ -145,6 +174,14 @@ INVERTER_SENSORS = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
         value_fn=attrgetter("last_report_temperature_c"),
+    ),
+    PVSInverterSensorEntityDescription(
+        key="efficiency",
+        translation_key="efficiency",
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=0,
+        value_fn=lambda inverter: round((float(inverter.last_report_kw) / float(inverter.last_report_mppt_kw)) * 100),
     ),
 )
 
@@ -178,6 +215,14 @@ GATEWAY_SENSORS = (
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=PERCENTAGE,
         value_fn=attrgetter("cpu_usage_percent"),
+    ),
+    PVSGatewaySensorEntityDescription(
+        key="flashwear",
+        translation_key="flashwear",
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=0,
+        value_fn=attrgetter("flashwear_percent"),
     ),
 )
 

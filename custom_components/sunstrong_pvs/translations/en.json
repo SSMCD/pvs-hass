@@ -2,7 +2,7 @@
   "entity": {
     "sensor": {
       "gateway_uptime": {
-        "name": "Gateway uptime"
+        "name": "Uptime"
       },
       "ram_usage": {
         "name": "RAM usage"
@@ -13,26 +13,41 @@
       "cpu_usage": {
         "name": "CPU usage"
       },
-      "current_power_production": {
-        "name": "Current Power Production"
+      "flashwear": {
+        "name": "Flashwear"
+      },
+      "production_power": {
+        "name": "Production Power"
+      },
+      "mppt_power": {
+        "name": "MPPT Power"
       },
       "last_reported": {
         "name": "Last Reported"
       },
-      "lifetime_production": {
-        "name": "Lifetime Production"
+      "lifetime_energy": {
+        "name": "Lifetime Energy"
       },
       "production_current": {
         "name": "Production Current"
       },
+      "mppt_current": {
+        "name": "MPPT Current"
+      },
       "production_voltage": {
         "name": "Production Voltage"
+      },
+      "mppt_voltage": {
+        "name": "MPPT Voltage"
       },
       "frequency": {
         "name": "Grid Frequency"
       },
       "temperature": {
         "name": "Heatsink Temperature"
+      },
+      "efficiency": {
+        "name": "Efficiency"
       },
       "power_3ph_kw": {
         "name": "3-Phase Power"
